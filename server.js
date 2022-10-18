@@ -1,4 +1,5 @@
-const express = require('express')
+const Koa = require('koa')
+const koaBody = require('koa-body')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 const userRouter = require('./Routers/UserRouter')
@@ -13,11 +14,12 @@ const databaseFn = require('./config/database')
 
   await mongoose.connect(`mongodb://${database.host}:${database.port}/${database.name}`)
 
-  const app = express()
+  const app = new Koa()
 
-  app.use(express.json())
+  app.use(koaBody())
 
-  app.use('/api/users', userRouter)
+  //app.use('/api/users', userRouter)
+  app.use(userRouter.routes())
 
   const PORT = process.env.PORT || 8080
 

@@ -1,3 +1,4 @@
+const { createIndexes } = require("../Models/UserModel")
 
 
 class UserController {
@@ -6,32 +7,41 @@ class UserController {
  
   }
 
-  async getAll (req, res) {
+  async getAll (ctx) {
     try {
       const items = await this.service.getAll()
     
-      return res.json(items)
+      //return res.json(items)
+      return ctx.body = items
     } catch (e) {
       console.log(e)
-      return res.status(500).json({
+      ctx.response.status = 500
+      ctx.body = {
         error: e.message
-      })
-    }
+      } 
+      return
+      }
+    
   }
 
-  async create (req, res) {
-    const data = req.body
+  async create (ctx) {
+    const data = ctx.request.body
 
     try {
       const userCreated = await this.service.create(data)
-      return res.status(201).json(userCreated)
+      ctx.response.status = 201
+      ctx.body = userCreated
+      
     } catch (e) {
       console.log(e)
-      return res.status(500).json({
+      ctx.response.status = 500
+      ctx.body = {
         error: e.message
-      })
+      } 
+      return
+      }
     }
   }
-}
+
 
 module.exports = UserController
